@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 
 
 class Ui_MainWindow(object):
@@ -249,9 +250,31 @@ class Ui_MainWindow(object):
             self.label_result.setText(self.label_result.text() + number)
 
     def results(self):
-        result = eval(self.label_result.text())
-        self.label_result.setText(str(result))
-        self.is_equal = True
+        try:
+            result = eval(self.label_result.text())
+            self.label_result.setText(str(result))
+            self.is_equal = True
+        except ZeroDivisionError:
+            zero_division = QMessageBox()
+
+            zero_division.setWindowTitle('No math operation found')
+            zero_division.setText('No math operation found.')
+            zero_division.setIcon(QMessageBox.Warning)
+            zero_division.setStandardButtons(QMessageBox.Ok)
+            zero_division.exec_()
+
+            self.label_result.setText('0')
+
+        except SyntaxError:
+            syntax = QMessageBox()
+
+            syntax.setWindowTitle('Operation not found')
+            syntax.setText('Operation not found.')
+            syntax.setIcon(QMessageBox.Warning)
+            syntax.setStandardButtons(QMessageBox.Ok)
+            syntax.exec_()
+
+            self.label_result.setText('0')
 
     def clean(self):
         self.label_result.setText('0')
